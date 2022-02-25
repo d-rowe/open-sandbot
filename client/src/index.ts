@@ -1,3 +1,4 @@
+import KeyboardShortcuts from "./KeyboardShortcuts";
 import SandBotClient from "./SandBotClient";
 
 window.onload = hydrate;
@@ -8,4 +9,11 @@ function hydrate() {
     document.querySelector('#movement-lower-arm-right').addEventListener('click', SandBotClient.lowerArmRight);
     document.querySelector('#movement-upper-arm-left').addEventListener('click', SandBotClient.upperArmLeft);
     document.querySelector('#movement-upper-arm-right').addEventListener('click', SandBotClient.upperArmRight);
+
+    KeyboardShortcuts.init();
+    KeyboardShortcuts.on('Space', SandBotClient.home);
+    KeyboardShortcuts.on('ArrowLeft', SandBotClient.lowerArmLeft);
+    KeyboardShortcuts.on('ArrowRight', SandBotClient.lowerArmRight);
+    KeyboardShortcuts.on('ArrowUp', SandBotClient.upperArmLeft);
+    KeyboardShortcuts.on('ArrowDown', SandBotClient.upperArmRight);
 }
