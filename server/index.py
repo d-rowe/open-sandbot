@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, send_from_directory
+from flask import Flask, send_from_directory
 
 app = Flask(__name__, static_folder='../client/dist')
 
@@ -17,6 +17,14 @@ def serve(path):
 def movement():
     return '', 201
 
+@app.route('/api/software-update', methods=['POST'])
+def update():
+    stream = os.popen('cd .. && ./update.sh')
+    result = stream.read()
+    if ('compiled successfully' in result):
+        return 'Updated successfully', 201
+
+    return 'Failed to update', 500
 
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=True, port=5000)

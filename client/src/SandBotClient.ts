@@ -27,6 +27,17 @@ export default {
 
     async upperArmRight() {
         return sendMoveCommand(COMMANDS.ARM_UPPER_RIGHT);
+    },
+
+    async softwareUpdate() {
+        Logger.info('Software update started');
+        const response = await fetch('/api/software-update', {method: 'POST'});
+        if (response.status !== 201) {
+            Logger.error('Software update failed');
+            return;
+        }
+
+        Logger.info('Software update succeeded');
     }
 }
 
@@ -39,9 +50,9 @@ async function sendMoveCommand(command: string): Promise<void> {
         }
     );
     if (response.status !== 201) {
-        Logger.error(`command failed: ${command}`);
+        Logger.error(`Command failed: ${command}`);
         return;
     }
 
-    Logger.info(`command sent: ${command}`);
+    Logger.info(`Command sent: ${command}`);
 }

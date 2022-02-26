@@ -11,11 +11,14 @@ function hydrate() {
     addClickHandler('movement-upper-arm-left', SandBotClient.upperArmLeft);
     addClickHandler('movement-upper-arm-right', SandBotClient.upperArmRight);
 
+    addClickHandler('software-update', SandBotClient.softwareUpdate);
+
     KeyboardShortcuts.on('Space', SandBotClient.home);
     KeyboardShortcuts.on('ArrowLeft', SandBotClient.lowerArmLeft);
     KeyboardShortcuts.on('ArrowRight', SandBotClient.lowerArmRight);
     KeyboardShortcuts.on('ArrowUp', SandBotClient.upperArmLeft);
     KeyboardShortcuts.on('ArrowDown', SandBotClient.upperArmRight);
+
     KeyboardShortcuts.on('Backspace', Logger.clear);
 }
 
