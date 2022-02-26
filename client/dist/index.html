@@ -1,29 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>sandbot</title>
-    <script src="bundle.js"></script>
-  </head>
-  <body>
-    <div id="root">
-        <button id='movement-home'>
+
+<head>
+  <meta charset="utf-8" />
+  <title>sandbot</title>
+  <link rel="stylesheet" href="pure.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="bundle.js"></script>
+</head>
+
+<body>
+  <div id="root">
+    <h2>sandbot</h2>
+    <div class="movement-container">
+      <div class="home-container">
+        <button class="pure-button" id="movement-home">
           Home machine
         </button>
-        <br/>
-        <button id='movement-lower-arm-left'>
-          Lower arm left
-        </button>
-        <button id='movement-lower-arm-right'>
-          Lower arm right
-        </button>
-        <br/>
-        <button id='movement-upper-arm-left'>
-          Upper arm left
-        </button>
-        <button id='movement-upper-arm-right'>
-          Upper arm right
-        </button>
+      </div>
+      <button class="pure-button" id="movement-lower-arm-left">
+        Lower arm left
+      </button>
+      <button class="pure-button" id="movement-lower-arm-right">
+        Lower arm right
+      </button>
+      <br />
+      <button class="pure-button" id="movement-upper-arm-left">
+        Upper arm left
+      </button>
+      <button class="pure-button" id="movement-upper-arm-right">
+        Upper arm right
+      </button>
     </div>
-  </body>
+
+    <div class="log-container">
+
+    </div>
+</body>
 </html>

@@ -1,22 +1,32 @@
+import Logger from './Logger';
+
+enum COMMANDS {
+    HOME = 'HOME',
+    ARM_LOWER_LEFT = 'ARM_LOWER_LEFT',
+    ARM_LOWER_RIGHT = 'ARM_LOWER_RIGHT',
+    ARM_UPPER_LEFT = 'ARM_UPPER_LEFT',
+    ARM_UPPER_RIGHT = 'ARM_UPPER_RIGHT',
+}
+
 export default {
     async home(): Promise<void> {
-        return sendMoveCommand('home');
+        return sendMoveCommand(COMMANDS.HOME);
     },
 
     async lowerArmLeft() {
-        return sendMoveCommand('lower-arm-left');
+        return sendMoveCommand(COMMANDS.ARM_LOWER_LEFT);
     },
 
     async lowerArmRight() {
-        return sendMoveCommand('lower-arm-right');
+        return sendMoveCommand(COMMANDS.ARM_LOWER_RIGHT);
     },
 
     async upperArmLeft() {
-        return sendMoveCommand('upper-arm-left');
+        return sendMoveCommand(COMMANDS.ARM_UPPER_LEFT);
     },
 
     async upperArmRight() {
-        return sendMoveCommand('upper-arm-right');
+        return sendMoveCommand(COMMANDS.ARM_UPPER_RIGHT);
     }
 }
 
@@ -29,6 +39,9 @@ async function sendMoveCommand(command: string): Promise<void> {
         }
     );
     if (response.status !== 201) {
-        throw new Error('Failed to initiate movement');
+        Logger.error(`command failed: ${command}`);
+        return;
     }
+
+    Logger.info(`command sent: ${command}`);
 }

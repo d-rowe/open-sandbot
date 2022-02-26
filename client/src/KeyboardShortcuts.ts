@@ -12,8 +12,13 @@ export default {
     }
 }
 
-function onKeyDown(event: KeyboardEvent) {
-    const handler = handlers.get(event.code);
+function onKeyDown({code}: KeyboardEvent) {
+    // prevent conflicts with inputs, text areas, etc
+    if (/input|textarea|select/i.test(document.activeElement.nodeName)) {
+        return;
+    }
+
+    const handler = handlers.get(code);
     if (handler) {
         handler();
     }
