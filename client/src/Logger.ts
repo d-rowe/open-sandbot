@@ -4,8 +4,7 @@ enum LogLevel {
     DEBUG = 'debug',
 }
 
-const MAX_LOG_COUNT = 200;
-let logCount = 0;
+const MAX_LOG_COUNT = 50;
 
 export default {
     info(log: string) {
@@ -35,12 +34,10 @@ function addLog(level: LogLevel, message: string) {
     logEntry.classList.add(`log-${level}`);
     const logContainer = getLogContainer();
 
-    while (logCount >= MAX_LOG_COUNT - 1) {
+    while (logContainer.children.length >= MAX_LOG_COUNT) {
         logContainer.firstChild.remove();
-        logCount -= 1;
     }
 
     logContainer.appendChild(logEntry);
-    logCount += 1;
     logContainer.scroll({top: logContainer.scrollHeight});
 }
