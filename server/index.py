@@ -1,5 +1,5 @@
 import os
-from bot import track_runner
+from bot import tracks
 from flask import Flask, send_from_directory
 
 app = Flask(__name__, static_folder='../client/dist')
@@ -9,6 +9,7 @@ app = Flask(__name__, static_folder='../client/dist')
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    tracks.run('zelda_triangles')
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
@@ -17,7 +18,6 @@ def serve(path):
 
 @app.route('/api/start', methods=['POST'])
 def movement():
-    track_runner.run('zelda_triangles')
     return '', 201
 
 

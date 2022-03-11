@@ -1,7 +1,7 @@
 import bot
 
 
-def run(track: str):
+def run_track(track: str):
     track_file = '{}.thr'.format(track)
     total_lines = 0
     current_line = 0
