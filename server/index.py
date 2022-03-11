@@ -1,5 +1,5 @@
 import os
-from bot import bot
+from bot import track_runner
 from flask import Flask, send_from_directory
 
 app = Flask(__name__, static_folder='../client/dist')
@@ -15,9 +15,9 @@ def serve(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 
-@app.route('/api/move', methods=['POST'])
+@app.route('/api/start', methods=['POST'])
 def movement():
-    bot.move_to_angles(90, 90)
+    track_runner.run('zelda_triangles')
     return '', 201
 
 
