@@ -2,14 +2,19 @@ import os
 from uuid import uuid4
 from datetime import datetime, timezone
 import json
-import bot
+import time
+
+is_local = bool(os.getenv('LOCAL'))
+if not is_local:
+    import bot
 
 track_dir = 'tracks'
 manifest_filename = 'manifest.json'
 manifest_path = os.path.join(track_dir, manifest_filename)
 
+is_running = False
 
-# initialize
+
 def init():
     # create track folder if it doesn't yet exist
     if not os.path.isdir(track_dir):
@@ -46,6 +51,8 @@ def create_track(name: str, content: str):
 
 # run track
 def run(track_id: str):
+    global is_running
+    is_running = True
     track_file = '{}.thr'.format(track_id)
     track_path = os.path.join(track_dir, track_file)
     total_lines = 0
@@ -72,20 +79,25 @@ def run(track_id: str):
                     theta = float(t_r_str[0])
                     rho = float(t_r_str[1])
                     print(theta, rho, '({}%)'.format(get_percent_complete()))
-                    bot.to_theta_rho(theta, rho)
+                    if is_local:
+                        time.sleep(0.001)
+                    else:
+                        bot.to_theta_rho(theta, rho)
                 except ValueError:
                     print('ERROR: Cannot parse line', line)
 
                 current_line += 1
+    is_running = False
 
-
-def __get_now():
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
 
 
 def get_manifest() -> dict:
     content = open(manifest_path, "r")
     return json.loads(content.read())
+
+
+def __get_now():
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S")
 
 
 def __write_to_manifest(d: dict):

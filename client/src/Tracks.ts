@@ -9,10 +9,16 @@ export default {
         tracks.forEach(track => {
             const row = document.createElement('tr');
             const nameCell = document.createElement('td');
+            const actionCell = document.createElement('td');
+            const actionButton = document.createElement('button');
+            actionButton.innerText = 'Start';
+            actionButton.onclick = () => TrackClient.startTrack(track.track_id);
+            actionCell.append(actionButton);
 
             row.setAttribute('data-track-id', track.track_id);
             nameCell.innerText = track.name;
             row.append(nameCell);
+            row.append(actionCell);
             fragment.append(row);
         });
 
@@ -27,28 +33,7 @@ export default {
 }
 
 function init() {
-    hydrate();
     constructHeader();
-}
-
-function hydrate() {
-    const tracksTable = getTracksTable();
-    tracksTable.addEventListener('click', evt => {
-        let target = evt.target as HTMLElement;
-
-        while (!getTrackId() && target.parentElement) {
-            target = target.parentElement;
-        }
-
-        const trackId = getTrackId();
-        if (trackId) {
-            TrackClient.startTrack(trackId);
-        }
-
-        function getTrackId(): string {
-            return target?.getAttribute('data-track-id');
-        }
-    });
 }
 
 function constructHeader() {
