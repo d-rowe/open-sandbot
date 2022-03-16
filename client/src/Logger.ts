@@ -25,7 +25,7 @@ export default {
 }
 
 function getLogContainer(): HTMLDivElement {
-    return document.querySelector('.log-container');
+    return document.getElementById('log-container') as HTMLDivElement;
 }
 
 function addLog(level: LogLevel, message: string) {

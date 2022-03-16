@@ -13,7 +13,7 @@ button {
     justify-content: center;
 }
 
-.log-container {
+#log-container {
     margin-top: 4px;
     font-family: monospace;
     background-color: #e6e6e6;
@@ -36,4 +36,9 @@ button {
 
 .log-container .log-error {
     color: #8F2D56;
+}
+
+#software-update {
+    position: absolute;
+    right: 0;
 }

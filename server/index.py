@@ -1,15 +1,27 @@
 import os
-from bot import tracks
-from flask import Flask, send_from_directory
+import track_manager
+
+from flask import Flask, request, send_from_directory
 
 app = Flask(__name__, static_folder='../client/dist')
+
+
+@app.route('/api/tracks-metadata', methods=['GET'])
+def get_manifest():
+    return track_manager.get_manifest(), 200
+
+
+@app.route('/api/start-track', methods=['POST'])
+def start_track():
+    track_id = request.json['trackId']
+    track_manager.run(track_id)
+    return '', 201
 
 
 # static assets
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
-    tracks.run('zelda_triangles')
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
@@ -32,4 +44,4 @@ def update():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=True, port=5000, host="0.0.0.0")
+    app.run(debug=True)

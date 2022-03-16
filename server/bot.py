@@ -6,10 +6,12 @@ from adafruit_motorkit import MotorKit
 kit = MotorKit()
 __steps_per_degree: float = 4.77  # tweak for accuracy
 __arm_length: int = 190  # total arm length in mm
+__upper_home_degree = 90
+__lower_home_degree = 180
 __upper_stepper = kit.stepper1
 __lower_stepper = kit.stepper2
-__upper_position: int = 90 * __steps_per_degree
-__lower_position: int = 180 * __steps_per_degree
+__upper_position: int = round(__upper_home_degree * __steps_per_degree)
+__lower_position: int = round(__lower_home_degree * __steps_per_degree)
 
 
 def __step(stepper, direction):
