@@ -12,7 +12,7 @@ track_dir = 'tracks'
 manifest_filename = 'manifest.json'
 manifest_path = os.path.join(track_dir, manifest_filename)
 
-is_running = False
+in_progress = False
 
 
 def init():
@@ -51,8 +51,8 @@ def create_track(name: str, content: str):
 
 # run track
 def run(track_id: str):
-    global is_running
-    is_running = True
+    global in_progress
+    in_progress = True
     track_file = '{}.thr'.format(track_id)
     track_path = os.path.join(track_dir, track_file)
     total_lines = 0
@@ -87,7 +87,7 @@ def run(track_id: str):
                     print('ERROR: Cannot parse line', line)
 
                 current_line += 1
-    is_running = False
+    in_progress = False
 
 
 

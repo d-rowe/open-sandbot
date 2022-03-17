@@ -10,7 +10,7 @@ def init(app: Flask):
 
     @app.route('/api/start-track', methods=['POST'])
     def start_track():
-        if track_manager.is_running:
+        if track_manager.in_progress:
             return 'Run in progress', 409
 
         track_id = request.json['trackId']
