@@ -6,7 +6,7 @@ import time
 
 is_local = bool(os.getenv('LOCAL'))
 if not is_local:
-    import bot
+    from models import bot
 
 track_dir = 'tracks'
 manifest_filename = 'manifest.json'

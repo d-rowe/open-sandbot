@@ -80,5 +80,4 @@ def release():
 
 @atexit.register
 def exit():
-    to_home()
     release()

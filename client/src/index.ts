@@ -5,6 +5,7 @@ import TrackClient from './TrackClient';
 import Tracks from './Tracks';
 
 window.onload = hydrate;
+window.sandbot = SandBotClient;
 
 async function hydrate() {
     Tracks.init();

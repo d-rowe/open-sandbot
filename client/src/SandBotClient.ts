@@ -1,3 +1,4 @@
+import ApiClient from './ApiClient';
 import Logger from './Logger';
 
 enum COMMANDS {
@@ -38,6 +39,10 @@ export default {
         }
 
         Logger.info('Software update succeeded');
+    },
+
+    async moveToAngles(angle1: number, angle2: number) {
+        await ApiClient.post('/api/move-to-angles', {angles: [angle1, angle2]});
     }
 }
 
