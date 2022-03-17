@@ -17,6 +17,6 @@ def init(app: Flask):
         if is_local:
             return '', 500
 
-        track_thread = threading.Thread(target=bot.to_arm_angles(), args=(a1, a2,))
+        track_thread = threading.Thread(target=bot.to_arm_angles, args=(a1, a2,))
         track_thread.start()
         return '', 201
