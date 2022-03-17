@@ -9,7 +9,7 @@ if not is_local:
 
 def init(app: Flask):
     @app.route('/api/move-to-angles', methods=['POST'])
-    def start_track():
+    def move_to_angles():
         angles = request.json['angles']
         a1 = float(angles[0])
         a2 = float(angles[1])
