@@ -4,6 +4,7 @@ from adafruit_motor import stepper as STEPPER
 from adafruit_motorkit import MotorKit
 
 kit = MotorKit()
+in_progress = False
 __steps_per_degree: float = 4.77  # tweak for accuracy
 __arm_length: int = 190  # total arm length in mm
 __upper_home_degree = 90
@@ -30,9 +31,11 @@ def __lower_step(direction):
 
 
 def to_arm_angles(angle1: float, angle2: float):
+    global in_progress
     global __lower_position
     global __upper_position
 
+    in_progress = True
     # convert angles to target step positions for steppers
     target_lower_steps = round(angle1 * __steps_per_degree)
     target_upper_steps = round(angle2 * __steps_per_degree)
@@ -55,6 +58,7 @@ def to_arm_angles(angle1: float, angle2: float):
 
     __lower_position = target_lower_steps
     __upper_position = target_upper_steps
+    in_progress = False
 
 
 def to_theta_rho(theta: float, rho: float):
