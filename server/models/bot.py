@@ -17,8 +17,8 @@ __lower_position: int = round(__lower_home_degree * __steps_per_degree)
 
 def get_position_in_angles():
     return {
-        "lower": __lower_position * __steps_per_degree,
-        "upper": __upper_position * __steps_per_degree
+        "lower": __lower_position / __steps_per_degree,
+        "upper": __upper_position / __steps_per_degree
     }
 
 
