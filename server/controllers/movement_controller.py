@@ -36,7 +36,7 @@ def init(app: Flask):
 
         position = bot.get_position_in_angles()
 
-        return position, 201
+        return position, 200
 
     def move_to_angles(req: Request):
         angles = req.json['angles']

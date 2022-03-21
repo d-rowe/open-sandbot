@@ -7,12 +7,10 @@ kit = MotorKit()
 in_progress = False
 __steps_per_degree: float = 4.77  # tweak for accuracy
 __arm_length: int = 190  # total arm length in mm
-__upper_home_degree = 90
-__lower_home_degree = 180
 __upper_stepper = kit.stepper1
 __lower_stepper = kit.stepper2
-__upper_position: int = round(__upper_home_degree * __steps_per_degree)
-__lower_position: int = round(__lower_home_degree * __steps_per_degree)
+__upper_position: int = 0
+__lower_position: int = 0
 
 
 def get_position_in_angles():
@@ -25,7 +23,7 @@ def get_position_in_angles():
 def __step(stepper, direction):
     if direction > 0:
         stepper.onestep(direction=STEPPER.BACKWARD, style=STEPPER.INTERLEAVE)
-    if direction < 1:
+    if direction < 0:
         stepper.onestep(direction=STEPPER.FORWARD, style=STEPPER.INTERLEAVE)
 
 
@@ -48,6 +46,9 @@ def to_arm_angles(angle1: float, angle2: float):
     def get_direction(steps: int):
         return steps / abs(steps)
 
+    if in_progress:
+        return
+
     in_progress = True
     # convert angles to target step positions for steppers
     target_lower_steps = round(angle1 * __steps_per_degree)
@@ -60,21 +61,19 @@ def to_arm_angles(angle1: float, angle2: float):
     tick = 0
     target = max(abs(relative_lower_steps), 1) * max(abs(relative_upper_steps), 1)
     while tick <= target:
-        upper_should_move = should_move(relative_lower_steps)
-        lower_should_move = should_move(relative_upper_steps)
+        upper_should_move = should_move(relative_upper_steps)
+        lower_should_move = should_move(relative_lower_steps)
         if upper_should_move:
-            direction = get_direction(relative_lower_steps)
+            direction = get_direction(relative_upper_steps)
             __upper_step(direction)
             __upper_position += direction
         if lower_should_move:
-            direction = get_direction(relative_upper_steps)
+            direction = get_direction(relative_lower_steps)
             __lower_step(direction)
             __lower_position += direction
 
         tick += 1
 
-    # __lower_position = target_lower_steps
-    # __upper_position = target_upper_steps
     in_progress = False
 
 
@@ -94,11 +93,7 @@ def to_home():
     to_arm_angles(90, 180)
 
 
+@atexit.register
 def release():
     __upper_stepper.release()
     __lower_stepper.release()
-
-
-@atexit.register
-def exit():
-    release()
