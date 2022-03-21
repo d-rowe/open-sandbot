@@ -3,9 +3,9 @@ from uuid import uuid4
 from datetime import datetime, timezone
 import json
 import time
+from lib import env
 
-is_local = bool(os.getenv('LOCAL'))
-if not is_local:
+if not env.is_local:
     from models import bot
 
 track_dir = 'tracks'
@@ -79,7 +79,7 @@ def run(track_id: str):
                     theta = float(t_r_str[0])
                     rho = float(t_r_str[1])
                     print(theta, rho, '({}%)'.format(get_percent_complete()))
-                    if is_local:
+                    if env.is_local:
                         time.sleep(0.001)
                     else:
                         bot.to_theta_rho(theta, rho)
@@ -88,7 +88,6 @@ def run(track_id: str):
 
                 current_line += 1
     in_progress = False
-
 
 
 def get_manifest() -> dict:
