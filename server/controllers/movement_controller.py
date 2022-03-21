@@ -29,7 +29,7 @@ def init(app: Flask):
         return '', 201
 
     @app.route('/api/bot/position', methods=['GET'])
-    def move():
+    def get_position():
         # Nothing we can do if we're running locally
         if env.is_local:
             return '', 500
