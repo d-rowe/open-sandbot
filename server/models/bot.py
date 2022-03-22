@@ -27,11 +27,13 @@ def __step_once(stepper, direction):
 
 
 def __step_once_upper(direction):
+    global __steps_upper
     __step_once(__stepper_upper, -direction)
     __steps_upper += direction
 
 
 def __step_once_lower(direction):
+    global __steps_lower
     __step_once(__stepper_lower, direction)
     __steps_lower += direction
 
