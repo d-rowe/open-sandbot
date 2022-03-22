@@ -57,17 +57,17 @@ def to_arm_angles(angle1: float, angle2: float):
     in_progress = True
     # convert angles to target step positions for steppers
     target_steps_lower = round(angle1 * __steps_per_degree)
-    target_steps_upper = round(angle2 * __steps_per_degree)
+    target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
 
     # relative steps needed to get from current position to target
     relative_steps_lower = target_steps_lower - __steps_lower
-    relative_steps_upper = target_steps_upper + target_steps_lower - __steps_upper
+    relative_steps_upper = target_steps_upper - __steps_upper
     print('Relative steps planned to move: lower {}, upper {}'
           .format(relative_steps_lower, relative_steps_upper))
 
     tick = 0
     target = max(abs(relative_steps_lower), 1) * max(abs(relative_steps_upper), 1)
-    while tick <= target:
+    while tick < target:
         lower_should_move = should_move(relative_steps_lower)
         upper_should_move = should_move(relative_steps_upper)
         if lower_should_move:
