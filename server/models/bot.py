@@ -6,7 +6,6 @@ from adafruit_motorkit import MotorKit
 kit = MotorKit()
 in_progress = False
 __steps_per_degree: float = 4.77  # tweak for accuracy
-__arm_length: int = 190  # total arm length in mm
 __stepper_upper = kit.stepper1
 __stepper_lower = kit.stepper2
 __steps_upper: int = 0
@@ -78,11 +77,9 @@ def to_arm_angles(angle1: float, angle2: float):
 
 
 def to_theta_rho(theta: float, rho: float):
-    half_length = __arm_length / 2
-    rho_dist = __arm_length * rho
     theta_degrees = math.degrees(theta)
     upper_angle = 180 - math.degrees(
-        math.acos((((half_length ** 2) * 2) - (rho_dist ** 2)) / (2 * half_length * half_length)))
+        math.acos((((0.5 ** 2) * 2) - (rho ** 2)) / 0.5))
     lower_angle_offset = upper_angle / 2
     lower_angle = theta_degrees - lower_angle_offset
 
