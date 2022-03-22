@@ -31,6 +31,7 @@ def __step_once_upper(direction):
     __step_once(__stepper_upper, -direction)
     __steps_upper += direction
 
+
 def __step_once_lower(direction):
     global __steps_lower
     __step_once(__stepper_lower, direction)
@@ -59,10 +60,11 @@ def to_arm_angles(angle1: float, angle2: float):
     # relative steps needed to get from current position to target
     relative_steps_lower = target_steps_lower - __steps_lower
     relative_steps_upper = target_steps_upper - __steps_upper
-    print('Relative steps planned to move: lower {}, upper {}'
+    print('Relative steps planned: {}, {}'
           .format(relative_steps_lower, relative_steps_upper))
 
     tick = 0
+    # TODO: need to revisit as this doesn't appear to work single-arm movements
     target = max(abs(relative_steps_lower), 1) * max(abs(relative_steps_upper), 1)
     while tick < target:
         lower_should_move = should_move(relative_steps_lower)
@@ -75,7 +77,7 @@ def to_arm_angles(angle1: float, angle2: float):
             __step_once_upper(direction)
 
         if lower_should_move or upper_should_move:
-            print('Raw position {}, {}'.format(__steps_lower, __steps_upper))
+            print('Raw position: {}, {}'.format(__steps_lower, __steps_upper))
 
         tick += 1
 
