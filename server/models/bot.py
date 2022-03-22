@@ -30,14 +30,11 @@ def __step_once_upper(direction):
     global __steps_upper
     __step_once(__stepper_upper, -direction)
     __steps_upper += direction
-    print('Upper steps: {}'.format(__steps_upper))
-
 
 def __step_once_lower(direction):
     global __steps_lower
     __step_once(__stepper_lower, direction)
     __steps_lower += direction
-    print('Lower steps: {}'.format(__steps_lower))
 
 
 def to_arm_angles(angle1: float, angle2: float):
@@ -77,6 +74,8 @@ def to_arm_angles(angle1: float, angle2: float):
             direction = get_direction(relative_steps_upper)
             __step_once_upper(direction)
 
+        if lower_should_move or upper_should_move:
+            print('Raw position {}, {}'.format(__steps_lower, __steps_upper))
 
         tick += 1
 
