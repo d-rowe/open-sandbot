@@ -7,38 +7,40 @@ kit = MotorKit()
 in_progress = False
 __steps_per_degree: float = 4.77  # tweak for accuracy
 __arm_length: int = 190  # total arm length in mm
-__upper_stepper = kit.stepper1
-__lower_stepper = kit.stepper2
-__upper_position: int = 0
-__lower_position: int = 0
+__stepper_upper = kit.stepper1
+__stepper_lower = kit.stepper2
+__steps_upper: int = 0
+__steps_lower: int = 0
 
 
 def get_position_in_angles():
     return {
-        "lower": __lower_position / __steps_per_degree,
-        "upper": __upper_position / __steps_per_degree
+        "lower": __steps_lower / __steps_per_degree,
+        "upper": __steps_upper / __steps_per_degree
     }
 
 
-def __step(stepper, direction):
+def __step_once(stepper, direction):
     if direction > 0:
         stepper.onestep(direction=STEPPER.BACKWARD, style=STEPPER.INTERLEAVE)
     if direction < 0:
         stepper.onestep(direction=STEPPER.FORWARD, style=STEPPER.INTERLEAVE)
 
 
-def __upper_step(direction):
-    __step(__upper_stepper, -direction)
+def __step_once_upper(direction):
+    __step_once(__stepper_upper, -direction)
+    __steps_upper += direction
 
 
-def __lower_step(direction):
-    __step(__lower_stepper, direction)
+def __step_once_lower(direction):
+    __step_once(__stepper_lower, direction)
+    __steps_lower += direction
 
 
 def to_arm_angles(angle1: float, angle2: float):
     global in_progress
-    global __lower_position
-    global __upper_position
+    global __steps_lower
+    global __steps_upper
 
     def should_move(relative_steps: int) -> bool:
         return relative_steps != 0 and (tick % relative_steps) == 0
@@ -51,26 +53,24 @@ def to_arm_angles(angle1: float, angle2: float):
 
     in_progress = True
     # convert angles to target step positions for steppers
-    target_lower_steps = round(angle1 * __steps_per_degree)
-    target_upper_steps = round(angle2 * __steps_per_degree)
+    target_steps_lower = round(angle1 * __steps_per_degree)
+    target_steps_upper = round(angle2 * __steps_per_degree)
 
     # relative steps needed to get from current position to target
-    relative_lower_steps = target_lower_steps - __lower_position
-    relative_upper_steps = relative_lower_steps + target_upper_steps - __upper_position
+    relative_steps_lower = target_steps_lower - __steps_lower
+    relative_steps_upper = relative_steps_lower + target_steps_upper - __steps_upper
 
     tick = 0
-    target = max(abs(relative_lower_steps), 1) * max(abs(relative_upper_steps), 1)
+    target = max(abs(relative_steps_lower), 1) * max(abs(relative_steps_upper), 1)
     while tick <= target:
-        upper_should_move = should_move(relative_upper_steps)
-        lower_should_move = should_move(relative_lower_steps)
+        upper_should_move = should_move(relative_steps_upper)
+        lower_should_move = should_move(relative_steps_lower)
         if upper_should_move:
-            direction = get_direction(relative_upper_steps)
-            __upper_step(direction)
-            __upper_position += direction
+            direction = get_direction(relative_steps_upper)
+            __step_once_upper(direction)
         if lower_should_move:
-            direction = get_direction(relative_lower_steps)
-            __lower_step(direction)
-            __lower_position += direction
+            direction = get_direction(relative_steps_lower)
+            __step_once_lower(direction)
 
         tick += 1
 
@@ -90,10 +90,10 @@ def to_theta_rho(theta: float, rho: float):
 
 
 def to_home():
-    to_arm_angles(90, 180)
+    to_arm_angles(0, 0)
 
 
 @atexit.register
 def release():
-    __upper_stepper.release()
-    __lower_stepper.release()
+    __stepper_upper.release()
+    __stepper_lower.release()
