@@ -84,6 +84,53 @@ def to_arm_angles(angle1: float, angle2: float):
     in_progress = False
 
 
+def to_arm_angles_new(angle1: float, angle2: float):
+    global in_progress
+    global __steps_lower
+    global __steps_upper
+
+    def get_direction(steps: int):
+        if steps == 0:
+            return 0
+        return steps / abs(steps)
+
+    if in_progress:
+        return
+
+    in_progress = True
+    # convert angles to target step positions for steppers
+    target_steps_lower = round(angle1 * __steps_per_degree)
+    target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
+
+    # relative steps needed to get from current position to target
+    relative_steps_lower = target_steps_lower - __steps_lower
+    relative_steps_upper = target_steps_upper - __steps_upper
+    print('Relative steps planned: {}, {}'
+          .format(relative_steps_lower, relative_steps_upper))
+
+    is_lower_arm_faster = abs(relative_steps_lower) > abs(relative_steps_upper)
+    faster_steps = relative_steps_lower if is_lower_arm_faster else relative_steps_upper
+    slower_steps = relative_steps_upper if is_lower_arm_faster else relative_steps_lower
+    faster_direction = get_direction(faster_steps)
+    slower_direction = get_direction(slower_steps)
+    abs_faster_steps = abs(faster_steps)
+    abs_slower_steps = abs(slower_steps)
+    speed_ratio = abs_slower_steps / abs_faster_steps
+    faster_step_once = __step_once_lower if is_lower_arm_faster else __step_once_upper
+    slower_step_once = __step_once_upper if is_lower_arm_faster else __step_once_lower
+
+    # Since we can only move one stepper at a time, we'll need to interpolate steps
+    slower_creep = 0
+    for i in range(abs_faster_steps):
+        faster_step_once(faster_direction)
+        slower_creep += speed_ratio
+        if slower_creep >= 1:
+            slower_step_once(slower_direction)
+            slower_creep = 0
+
+    in_progress = False
+
+
 def to_theta_rho(theta: float, rho: float):
     theta_degrees = math.degrees(theta)
     upper_angle = 180 - math.degrees(
