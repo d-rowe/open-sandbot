@@ -42,7 +42,7 @@ def init(app: Flask):
         angles = req.json['angles']
         a1 = float(angles[0])
         a2 = float(angles[1])
-        threading.Thread(target=bot.to_arm_angles_new, args=(a1, a2,)).start()
+        threading.Thread(target=bot.to_arm_angles, args=(a1, a2,)).start()
 
     def move_to_theta_row(req: Request):
         theta = float(req.json['theta'])

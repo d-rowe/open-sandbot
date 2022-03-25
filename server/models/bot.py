@@ -5,7 +5,7 @@ from adafruit_motorkit import MotorKit
 
 kit = MotorKit()
 in_progress = False
-__steps_per_degree: float = 4.77  # tweak for accuracy
+__steps_per_degree: float = 4.9  # tweak for accuracy
 __stepper_upper = kit.stepper1
 __stepper_lower = kit.stepper2
 __steps_upper: int = 0
@@ -43,52 +43,6 @@ def to_arm_angles(angle1: float, angle2: float):
     global __steps_lower
     global __steps_upper
 
-    def should_move(relative_steps: int) -> bool:
-        return relative_steps != 0 and (tick % relative_steps) == 0
-
-    def get_direction(steps: int):
-        return steps / abs(steps)
-
-    if in_progress:
-        return
-
-    in_progress = True
-    # convert angles to target step positions for steppers
-    target_steps_lower = round(angle1 * __steps_per_degree)
-    target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
-
-    # relative steps needed to get from current position to target
-    relative_steps_lower = target_steps_lower - __steps_lower
-    relative_steps_upper = target_steps_upper - __steps_upper
-    print('Relative steps planned: {}, {}'
-          .format(relative_steps_lower, relative_steps_upper))
-
-    tick = 0
-    # TODO: need to revisit as this doesn't appear to work single-arm movements
-    target = max(abs(relative_steps_lower), 1) * max(abs(relative_steps_upper), 1)
-    while tick < target:
-        lower_should_move = should_move(relative_steps_lower)
-        upper_should_move = should_move(relative_steps_upper)
-        if lower_should_move:
-            direction = get_direction(relative_steps_lower)
-            __step_once_lower(direction)
-        if upper_should_move:
-            direction = get_direction(relative_steps_upper)
-            __step_once_upper(direction)
-
-        if lower_should_move or upper_should_move:
-            print('Raw position: {}, {}'.format(__steps_lower, __steps_upper))
-
-        tick += 1
-
-    in_progress = False
-
-
-def to_arm_angles_new(angle1: float, angle2: float):
-    global in_progress
-    global __steps_lower
-    global __steps_upper
-
     def get_direction(steps: int):
         if steps == 0:
             return 0
@@ -103,8 +57,15 @@ def to_arm_angles_new(angle1: float, angle2: float):
     target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
 
     # relative steps needed to get from current position to target
-    relative_steps_lower = target_steps_lower - __steps_lower
-    relative_steps_upper = target_steps_upper - __steps_upper
+    # relative_steps_lower = target_steps_lower - __steps_lower
+    # relative_steps_upper = target_steps_upper - __steps_upper
+    relative_steps_lower = target_steps_lower
+    relative_steps_upper = target_steps_upper
+
+    if relative_steps_lower == 0 and relative_steps_upper == 0:
+        # already at target position
+        return
+
     print('Relative steps planned: {}, {}'
           .format(relative_steps_lower, relative_steps_upper))
 
@@ -124,9 +85,9 @@ def to_arm_angles_new(angle1: float, angle2: float):
     for i in range(abs_faster_steps):
         faster_step_once(faster_direction)
         slower_creep += speed_ratio
-        if slower_creep >= 1:
+        while slower_creep >= 1:
             slower_step_once(slower_direction)
-            slower_creep = 0
+            slower_creep -= 1
 
     in_progress = False
 
