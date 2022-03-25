@@ -46,21 +46,18 @@ def to_arm_angles(angle1: float, angle2: float):
     def get_direction(steps: int):
         if steps == 0:
             return 0
-        return steps / abs(steps)
+        return steps // abs(steps)
 
     if in_progress:
         return
 
-    in_progress = True
     # convert angles to target step positions for steppers
     target_steps_lower = round(angle1 * __steps_per_degree)
     target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
 
     # relative steps needed to get from current position to target
-    # relative_steps_lower = target_steps_lower - __steps_lower
-    # relative_steps_upper = target_steps_upper - __steps_upper
-    relative_steps_lower = target_steps_lower
-    relative_steps_upper = target_steps_upper
+    relative_steps_lower = target_steps_lower - __steps_lower
+    relative_steps_upper = target_steps_upper - __steps_upper
 
     if relative_steps_lower == 0 and relative_steps_upper == 0:
         # already at target position
@@ -79,6 +76,8 @@ def to_arm_angles(angle1: float, angle2: float):
     speed_ratio = abs_slower_steps / abs_faster_steps
     faster_step_once = __step_once_lower if is_lower_arm_faster else __step_once_upper
     slower_step_once = __step_once_upper if is_lower_arm_faster else __step_once_lower
+
+    in_progress = True
 
     # Since we can only move one stepper at a time, we'll need to interpolate steps
     slower_creep = 0
