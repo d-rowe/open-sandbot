@@ -1,7 +1,7 @@
-import os
 import threading
 from flask import Flask, request, Request
 from lib import env
+from models import track_manager
 
 if not env.is_local:
     from models import bot
@@ -34,6 +34,7 @@ def init(app: Flask):
         if env.is_local:
             return '', 500
 
+        track_manager.stop()
         bot.stop()
 
         return '', 201

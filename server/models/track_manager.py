@@ -13,6 +13,14 @@ manifest_filename = 'manifest.json'
 manifest_path = os.path.join(track_dir, manifest_filename)
 
 in_progress = False
+__force_stop = False
+
+
+def stop():
+    global in_progress
+    global __force_stop
+    if in_progress:
+        __force_stop = True
 
 
 def init():
@@ -52,6 +60,7 @@ def create_track(name: str, content: str):
 # run track
 def run(track_id: str):
     global in_progress
+    global __force_stop
     in_progress = True
     track_file = '{}.thr'.format(track_id)
     track_path = os.path.join(track_dir, track_file)
@@ -82,6 +91,10 @@ def run(track_id: str):
                     if env.is_local:
                         time.sleep(0.001)
                     else:
+                        # handle stop command
+                        if __force_stop:
+                            __force_stop = False
+                            break
                         bot.to_theta_rho(theta, rho)
                 except ValueError:
                     print('ERROR: Cannot parse line', line)
