@@ -4,7 +4,7 @@ from uuid import uuid4
 from datetime import datetime, timezone
 import json
 import time
-from lib import env
+from lib import env, is_valid_track_url
 
 if not env.is_local:
     from models import bot
@@ -105,6 +105,32 @@ def run(track_id: str):
     in_progress = False
 
 
+def rename_track(track_id: str, name: str):
+    manifest = get_manifest()
+    for track in manifest['tracks']:
+        if track.track_id == track_id:
+            track.name = name
+            __write_to_manifest(manifest)
+            return
+    raise Exception("Cannot rename track that doesn't exist: {}".format(track_id))
+
+
+def import_track(url: str):
+    if not is_valid_track_url(url):
+        raise Exception("Invalid track file: {}".format(url))
+
+    track_name = url.split('/')[-1]
+    track_file_path = os.path.join(track_dir, track_name)
+    with requests.get(url, stream=True) as r:
+        r.raise_for_status()
+        with open(track_file_path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                # If you have chunk encoded response uncomment if
+                # and set chunk_size parameter to None.
+                # if chunk:
+                f.write(chunk)
+
+
 def get_manifest() -> dict:
     content = open(manifest_path, "r")
     return json.loads(content.read())
@@ -120,24 +146,5 @@ def __write_to_manifest(d: dict):
     with open(manifest_path, 'w') as manifest:
         manifest.write(content)
 
-
-def is_valid_track_url(url: str) -> bool:
-    try:
-        with requests.get(url, stream=True) as response:
-            line_count = 0
-            for line in response.iter_lines():
-                if line_count > LINE_LIMIT:
-                    return False
-                if line:
-                    decoded_line = line.decode('utf-8')
-                    values = decoded_line.split(' ')
-                    float(values[0])  # parse theta
-                    rho = float(values[0])
-                    if rho > 1 or rho < 0:
-                        raise Exception('Rho value out of bounds')
-                line_count += 1
-            return True
-    except:
-        return False
 
 init()

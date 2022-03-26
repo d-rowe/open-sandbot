@@ -80,9 +80,6 @@ def to_arm_angles(angle1: float, angle2: float):
         # already at target position
         return
 
-    print('Relative steps planned: {}, {}'
-          .format(relative_steps_lower, relative_steps_upper))
-
     is_lower_arm_faster = abs(relative_steps_lower) > abs(relative_steps_upper)
     faster_steps = relative_steps_lower if is_lower_arm_faster else relative_steps_upper
     slower_steps = relative_steps_upper if is_lower_arm_faster else relative_steps_lower

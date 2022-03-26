@@ -19,6 +19,10 @@ const TrackClient = {
 
     async startTrack(trackId: string) {
         await BaseClient.post('/api/start-track', {trackId});
+    },
+
+    async importTrack(trackUrl: string) {
+        await BaseClient.post('/api/import-track', {url: trackUrl});
     }
 }
 
