@@ -28,6 +28,18 @@ def init(app: Flask):
 
         return '', 201
 
+    @app.route('/api/bot/speed', methods=['POST'])
+    def set_speed():
+        # Nothing we can do if we're running locally
+        if env.is_local:
+            return '', 500
+
+        speed = request.json['speed']
+        bot.set_speed(speed)
+
+        return '', 201
+
+
     @app.route('/api/bot/stop', methods=['POST'])
     def stop():
         # Nothing we can do if we're running locally

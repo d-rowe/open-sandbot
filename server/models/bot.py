@@ -1,5 +1,7 @@
 import atexit
 import math
+from time import sleep
+
 from adafruit_motor import stepper as STEPPER
 from adafruit_motorkit import MotorKit
 
@@ -11,6 +13,12 @@ __stepper_lower = kit.stepper2
 __steps_upper: int = 0
 __steps_lower: int = 0
 __force_stop: bool = False
+__step_delay: int = 0
+
+
+def set_speed(speed: int):
+    global __step_delay
+    __step_delay = 100 - speed
 
 
 def stop():
@@ -50,6 +58,7 @@ def to_arm_angles(angle1: float, angle2: float):
     global __steps_lower
     global __steps_upper
     global __force_stop
+    global __step_delay
 
     def get_direction(steps: int):
         if steps == 0:
@@ -64,8 +73,9 @@ def to_arm_angles(angle1: float, angle2: float):
     target_steps_upper = round(angle2 * __steps_per_degree) + target_steps_lower
 
     # relative steps needed to get from current position to target
-    relative_steps_lower = target_steps_lower - __steps_lower
-    relative_steps_upper = target_steps_upper - __steps_upper
+    # ignore extra full rotations
+    relative_steps_lower = (target_steps_lower - __steps_lower) % (__steps_per_degree * 360)
+    relative_steps_upper = (target_steps_upper - __steps_upper) % (__steps_per_degree * 360)
 
     if relative_steps_lower == 0 and relative_steps_upper == 0:
         # already at target position
@@ -100,6 +110,9 @@ def to_arm_angles(angle1: float, angle2: float):
         while slower_creep >= 1:
             slower_step_once(slower_direction)
             slower_creep -= 1
+
+        if __step_delay > 0:
+            sleep(__step_delay / 1000)
 
     in_progress = False
 
