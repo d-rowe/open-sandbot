@@ -35,6 +35,13 @@ def init(app: Flask):
             return '', 500
 
         speed = request.json['speed']
+        try:
+            speed_int = int(speed)
+            if speed_int > 100 or speed < 0:
+                return 'Speed out of bounds', 400
+        except ValueError:
+            return 'Speed must be int', 400
+
         bot.set_speed(speed)
 
         return '', 201
