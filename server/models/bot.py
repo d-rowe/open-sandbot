@@ -74,8 +74,9 @@ def to_arm_angles(angle1: float, angle2: float):
 
     # relative steps needed to get from current position to target
     # ignore extra full rotations
-    relative_steps_lower = (target_steps_lower - __steps_lower) % (__steps_per_degree * 360)
-    relative_steps_upper = (target_steps_upper - __steps_upper) % (__steps_per_degree * 360)
+    steps_per_rotation = round(__steps_per_degree * 360)
+    relative_steps_lower = (target_steps_lower - __steps_lower) % steps_per_rotation
+    relative_steps_upper = (target_steps_upper - __steps_upper) % steps_per_rotation
 
     if relative_steps_lower == 0 and relative_steps_upper == 0:
         # already at target position
