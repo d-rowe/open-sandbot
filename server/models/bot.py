@@ -10,6 +10,13 @@ __stepper_upper = kit.stepper1
 __stepper_lower = kit.stepper2
 __steps_upper: int = 0
 __steps_lower: int = 0
+__force_stop: bool = False
+
+
+def stop():
+    global __force_stop
+    if in_progress:
+        __force_stop = True
 
 
 def get_position_in_angles():
@@ -42,6 +49,7 @@ def to_arm_angles(angle1: float, angle2: float):
     global in_progress
     global __steps_lower
     global __steps_upper
+    global __force_stop
 
     def get_direction(steps: int):
         if steps == 0:
@@ -82,6 +90,11 @@ def to_arm_angles(angle1: float, angle2: float):
     # Since we can only move one stepper at a time, we'll need to interpolate steps
     slower_creep = 0
     for i in range(abs_faster_steps):
+        # handle stop command
+        if __force_stop:
+            __force_stop = False
+            break
+
         faster_step_once(faster_direction)
         slower_creep += speed_ratio
         while slower_creep >= 1:
