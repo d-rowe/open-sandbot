@@ -1,4 +1,5 @@
 import os
+import requests
 from uuid import uuid4
 from datetime import datetime, timezone
 import json
@@ -8,6 +9,7 @@ from lib import env
 if not env.is_local:
     from models import bot
 
+track_line_limit = 5000
 track_dir = 'tracks'
 manifest_filename = 'manifest.json'
 manifest_path = os.path.join(track_dir, manifest_filename)
@@ -118,5 +120,24 @@ def __write_to_manifest(d: dict):
     with open(manifest_path, 'w') as manifest:
         manifest.write(content)
 
+
+def is_valid_track_url(url: str) -> bool:
+    try:
+        with requests.get(url, stream=True) as response:
+            line_count = 0
+            for line in response.iter_lines():
+                if line_count > LINE_LIMIT:
+                    return False
+                if line:
+                    decoded_line = line.decode('utf-8')
+                    values = decoded_line.split(' ')
+                    float(values[0])  # parse theta
+                    rho = float(values[0])
+                    if rho > 1 or rho < 0:
+                        raise Exception('Rho value out of bounds')
+                line_count += 1
+            return True
+    except:
+        return False
 
 init()

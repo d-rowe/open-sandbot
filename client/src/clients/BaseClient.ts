@@ -1,10 +1,10 @@
-export default {
+const BaseClient = {
     async get(endpoint: string) {
         const response = await fetch(endpoint);
         return response.json();
     },
 
-    async post(endpoint: string, body: Object) {
+    async post(endpoint: string, body: Object = {}) {
         return fetch(
             endpoint,
             {
@@ -17,3 +17,5 @@ export default {
         );
     }
 }
+
+export default BaseClient;

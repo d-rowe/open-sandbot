@@ -4,7 +4,7 @@ from controllers import movement_controller
 from controllers import track_controller
 from controllers import software_update_controller
 
-app = Flask(__name__, static_folder='../client/dist')
+app = Flask(__name__, static_folder='../client/build')
 
 
 track_controller.init(app)
