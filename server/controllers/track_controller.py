@@ -14,7 +14,7 @@ def init(app: Flask):
         if track_manager.in_progress:
             return 'Run in progress', 409
 
-        track_id = request.json['url']
+        track_id = request.json['trackId']
         track_thread = threading.Thread(target=track_manager.run, args=(track_id,))
         track_thread.start()
         return '', 201
