@@ -14,9 +14,9 @@ def is_valid_track_url(url: str) -> bool:
                     decoded_line = line.decode('utf-8')
                     values = decoded_line.split(' ')
                     float(values[0])  # parse theta
-                    rho = float(values[0])
+                    rho = float(values[1])
                     if rho > 1 or rho < 0:
-                        raise Exception('Rho value out of bounds')
+                        raise ValueError('Rho value out of bounds')
                 line_count += 1
             return True
     except:
