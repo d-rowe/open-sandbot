@@ -103,7 +103,7 @@ def import_track(url: str):
 
     track_id = uuid4().hex
     track_path = os.path.join(track_dir, '{}.thr'.format(track_id))
-    track_name = url.split('/')[-1]
+    track_name = url.split('/')[-1].replace('.thr', '')
 
     with requests.get(url, stream=True) as r:
         r.raise_for_status()
