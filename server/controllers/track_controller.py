@@ -30,7 +30,7 @@ def init(app: Flask):
         track_url = request.json['url']
         try:
             track_manager.import_track(track_url)
-        except:
+        except Exception as error:
             # Would be nice to model errors
-            return 'Invalid track', 400
+            return str(error), 500
         return '', 201

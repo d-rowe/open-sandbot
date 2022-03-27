@@ -4,7 +4,7 @@ from uuid import uuid4
 from datetime import datetime, timezone
 import json
 import time
-from lib import env, is_valid_track_url
+from lib import env, validate_track
 
 if not env.is_local:
     from models import bot
@@ -99,8 +99,7 @@ def rename_track(track_id: str, name: str):
 
 
 def import_track(url: str):
-    if not is_valid_track_url(url):
-        raise Exception("Invalid track file: {}".format(url))
+    validate_track(url)
 
     track_id = uuid4().hex
     track_path = os.path.join(track_dir, '{}.thr'.format(track_id))

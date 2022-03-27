@@ -1,6 +1,7 @@
 import React from 'react';
 import SpeedSlider from './SpeedSlider';
 import StopButton from './StopButton';
+import TrackImporter from './TrackImporter';
 import TrackTable from './TrackTable';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <SpeedSlider/>
       <TrackTable/>
       <StopButton/>
+      <TrackImporter/>
     </div>
   );
 }
