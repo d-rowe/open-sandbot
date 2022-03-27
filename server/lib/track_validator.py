@@ -3,7 +3,7 @@ import requests
 LINE_LIMIT = 5000
 
 
-def validate_track(url: str) -> bool:
+def validate(url: str) -> bool:
     with requests.get(url, stream=True) as response:
         line_count = 0
         for line in response.iter_lines():
