@@ -14,16 +14,28 @@ export type TracksMetadata = {
 
 const TrackClient = {
     async getTracksMetadata() {
-        return BaseClient.get('/api/tracks-metadata') as Promise<TracksMetadata>;
+        return get('metadata') as Promise<TracksMetadata>;
     },
 
     async startTrack(trackId: string) {
-        await BaseClient.post('/api/start-track', {trackId});
+        await post('start', {trackId});
     },
 
     async importTrack(trackUrl: string) {
-        await BaseClient.post('/api/import-track', {url: trackUrl});
+        await post('import', {url: trackUrl});
     }
+}
+
+function get(resource: string) {
+    return BaseClient.get(getResourceEndpoint(resource));
+}
+
+function post(resource: string, payload: Object = {}) {
+    return BaseClient.post(getResourceEndpoint(resource), payload);
+}
+
+function getResourceEndpoint(resource: string): string {
+    return '/api/tracks/' + resource;
 }
 
 export default TrackClient;

@@ -1,14 +1,21 @@
 import threading
 from flask import Flask, request, Request
 from lib import env
+from lib.endpoint_utils import get_api_endpoint
 from models import track_manager
 
 if not env.is_local:
     from models import bot
 
+PATH = 'bot'
+
+
+def get_bot_endpoint(resource: str) -> str:
+    return get_api_endpoint(PATH, resource)
+
 
 def init(app: Flask):
-    @app.route('/api/bot/move', methods=['POST'])
+    @app.route(get_bot_endpoint('move'), methods=['POST'])
     def move():
         # Nothing we can do if we're running locally
         if env.is_local:
@@ -28,7 +35,7 @@ def init(app: Flask):
 
         return '', 201
 
-    @app.route('/api/bot/speed', methods=['POST'])
+    @app.route(get_bot_endpoint('speed'), methods=['POST'])
     def set_speed():
         # Nothing we can do if we're running locally
         if env.is_local:
@@ -46,7 +53,7 @@ def init(app: Flask):
 
         return '', 201
 
-    @app.route('/api/bot/stop', methods=['POST'])
+    @app.route(get_bot_endpoint('stop'), methods=['POST'])
     def stop():
         # Nothing we can do if we're running locally
         if env.is_local:
@@ -57,7 +64,7 @@ def init(app: Flask):
 
         return '', 201
 
-    @app.route('/api/bot/position', methods=['GET'])
+    @app.route(get_bot_endpoint('position'), methods=['GET'])
     def get_position():
         # Nothing we can do if we're running locally
         if env.is_local:
