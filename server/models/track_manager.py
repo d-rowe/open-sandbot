@@ -1,3 +1,4 @@
+import atexit
 import os
 import requests
 from uuid import uuid4
@@ -23,6 +24,7 @@ def stop():
     global __force_stop
     if in_progress:
         __force_stop = True
+    bot.stop()
 
 
 def init():
@@ -138,6 +140,12 @@ def __write_to_manifest(d: dict):
     content = json.dumps(d, indent=4)
     with open(manifest_path, 'w') as manifest:
         manifest.write(content)
+
+
+@atexit.register
+def release():
+    stop()
+    bot.release()
 
 
 init()

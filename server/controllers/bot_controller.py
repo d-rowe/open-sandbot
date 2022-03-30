@@ -60,7 +60,28 @@ def init(app: Flask):
             return '', 500
 
         track_manager.stop()
-        bot.stop()
+
+        return '', 201
+
+    @app.route(get_bot_endpoint('set-home'), methods=['POST'])
+    def stop():
+        # Nothing we can do if we're running locally
+        if env.is_local:
+            return '', 500
+
+        track_manager.stop()
+        bot.set_home()
+
+        return '', 201
+
+    @app.route(get_bot_endpoint('release'), methods=['POST'])
+    def stop():
+        # Nothing we can do if we're running locally
+        if env.is_local:
+            return '', 500
+
+        track_manager.stop()
+        bot.release()
 
         return '', 201
 

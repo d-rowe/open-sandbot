@@ -11,6 +11,14 @@ const BotClient = {
         return post('stop');
     },
 
+    setHome() {
+        return post('set-home');
+    },
+
+    release() {
+        return post('release');
+    },
+
     moveToAngles(angle1: number, angle2: number) {
         return post('move-to-angles', {angles: [angle1, angle2]});
     }

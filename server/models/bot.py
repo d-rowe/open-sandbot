@@ -1,4 +1,3 @@
-import atexit
 import math
 from time import sleep
 
@@ -25,6 +24,13 @@ def stop():
     global __force_stop
     if in_progress:
         __force_stop = True
+
+
+def set_home():
+    global __steps_upper
+    global __steps_lower
+    __steps_upper = 0
+    __steps_lower = 0
 
 
 def get_position_in_angles():
@@ -127,7 +133,7 @@ def to_home():
     to_arm_angles(0, 0)
 
 
-@atexit.register
 def release():
+    stop()
     __stepper_upper.release()
     __stepper_lower.release()
