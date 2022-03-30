@@ -64,7 +64,7 @@ def init(app: Flask):
         return '', 201
 
     @app.route(get_bot_endpoint('set-home'), methods=['POST'])
-    def stop():
+    def set_home():
         # Nothing we can do if we're running locally
         if env.is_local:
             return '', 500
@@ -75,7 +75,7 @@ def init(app: Flask):
         return '', 201
 
     @app.route(get_bot_endpoint('release'), methods=['POST'])
-    def stop():
+    def release():
         # Nothing we can do if we're running locally
         if env.is_local:
             return '', 500
