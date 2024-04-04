@@ -1,0 +1,9 @@
+[submodule "parts"]
+	path = parts
+	url = https://github.com/d-rowe/open-sandbot-parts.git
+[submodule "firmware"]
+	path = firmware
+	url = https://github.com/d-rowe/open-sandbot-firmware.git
+[submodule "server"]
+	path = server
+	url = https://github.com/d-rowe/open-sandbot-server
