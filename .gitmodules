@@ -7,3 +7,6 @@
 [submodule "server"]
 	path = server
 	url = https://github.com/d-rowe/open-sandbot-server
+[submodule "website"]
+	path = website
+	url = https://github.com/d-rowe/open-sandbot-website.git
