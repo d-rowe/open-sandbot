@@ -1,5 +1,5 @@
 [submodule "firmware"]
-	path = parts
+	path = firmware
 	url = https://github.com/d-rowe/open-sandbot-firmware.git
 [submodule "parts"]
 	path = parts
